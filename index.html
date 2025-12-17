@@ -596,7 +596,7 @@ David" aria-label="Bulk names input" rows="10" style="resize: vertical; font-fam
      <h2 class="controls-header">Entries</h2>
      <div class="input-group"><input type="text" class="name-input" id="nameInput" placeholder="Enter a name..." aria-label="Name entry input"> <button class="add-button" id="addButton">Add</button>
      </div>
-     <div class="bulk-actions"><button class="bulk-button" id="clearAllButton">Clear All</button> <button class="bulk-button" id="shuffleButton">Shuffle</button>
+     <div class="bulk-actions"><button class="bulk-button" id="clearAllButton">Clear All</button> <button class="bulk-button" id="bulkAddButton">Bulk Add</button> <button class="bulk-button" id="shuffleButton">Shuffle</button>
      </div>
      <div class="names-list" id="namesList"></div>
      <div class="settings-section">
@@ -657,6 +657,12 @@ David" aria-label="Bulk names input" rows="10" style="resize: vertical; font-fam
     const confirmPrizeButton = document.getElementById('confirmPrizeButton');
     const cancelPrizeButton = document.getElementById('cancelPrizeButton');
     const winnerPrize = document.getElementById('winnerPrize');
+    const bulkModal = document.getElementById('bulkModal');
+    const bulkAddButton = document.getElementById('bulkAddButton');
+    const closeBulkButton = document.getElementById('closeBulkButton');
+    const bulkInput = document.getElementById('bulkInput');
+    const confirmBulkButton = document.getElementById('confirmBulkButton');
+    const cancelBulkButton = document.getElementById('cancelBulkButton');
 
     const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E2', '#F8B739', '#52B788'];
 
@@ -697,7 +703,15 @@ David" aria-label="Bulk names input" rows="10" style="resize: vertical; font-fam
         ctx.rotate(startAngle + sliceAngle / 2);
         ctx.textAlign = 'center';
         ctx.fillStyle = 'white';
-        ctx.font = 'bold 18px sans-serif';
+        
+        // Adjust font size based on number of entries
+        let fontSize = 18;
+        if (names.length > 20) fontSize = 14;
+        if (names.length > 30) fontSize = 12;
+        if (names.length > 40) fontSize = 10;
+        if (names.length > 50) fontSize = 9;
+        
+        ctx.font = `bold ${fontSize}px sans-serif`;
         ctx.textBaseline = 'middle';
         ctx.fillText(name, radius * 0.65, 0);
         ctx.restore();
@@ -903,6 +917,37 @@ David" aria-label="Bulk names input" rows="10" style="resize: vertical; font-fam
       winnerOverlay.classList.remove('show');
     });
 
+    bulkAddButton.addEventListener('click', () => {
+      bulkModal.classList.add('show');
+      bulkInput.value = '';
+      bulkInput.focus();
+    });
+
+    closeBulkButton.addEventListener('click', () => {
+      bulkModal.classList.remove('show');
+    });
+
+    cancelBulkButton.addEventListener('click', () => {
+      bulkModal.classList.remove('show');
+    });
+
+    confirmBulkButton.addEventListener('click', () => {
+      const text = bulkInput.value.trim();
+      if (text) {
+        const newNames = text.split('\n')
+          .map(name => name.trim())
+          .filter(name => name.length > 0);
+        
+        const remainingSlots = 100 - names.length;
+        const namesToAdd = newNames.slice(0, remainingSlots);
+        
+        names.push(...namesToAdd);
+        drawWheel();
+        renderNamesList();
+        bulkModal.classList.remove('show');
+      }
+    });
+
     window.deleteName = deleteName;
 
     async function onConfigChange(config) {
@@ -1043,5 +1088,5 @@ David" aria-label="Bulk names input" rows="10" style="resize: vertical; font-fam
     drawWheel();
     renderNamesList();
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9af507ac0534bc43',t:'MTc2NTk1OTkyOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9af5519cf71bbc43',t:'MTc2NTk2Mjk1Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
