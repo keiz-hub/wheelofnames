@@ -569,13 +569,14 @@
     </div>
     <div class="winner-overlay" id="winnerOverlay"></div>
     <div class="winner-display" id="winnerDisplay"><button class="close-winner-button" id="closeWinnerButton">×</button>
-     <p class="winner-label">🎉 Winner 🎉</p>
+     <p class="winner-label">���� Winner 🎉</p>
      <p class="winner-name" id="winnerName"></p>
      <p class="winner-prize" id="winnerPrize"></p>
     </div>
     <div class="prize-modal" id="prizeModal">
-     <div class="prize-modal-content"><button class="close-prize-button" id="closePrizeButton">��</button>
-      <h2 class="prize-modal-title">What's the prize?</h2><input type="text" class="prize-input" id="prizeInput" placeholder="Enter the prize (e.g., $100, Free Coffee, etc.)" aria-label="Prize input">
+     <div class="prize-modal-content"><button class="close-prize-button" id="closePrizeButton">×</button>
+      <h2 class="prize-modal-title">What's the prize?</h2><input type="text" class="prize-input" id="prizeInput" placeholder="Enter the prize (e.g., $100, Free Coffee, etc.)" aria-label="Prize input" required>
+      <p id="prizeError" style="color: #ff4757; font-size: 14px; margin: -15px 0 15px 0; display: none;">Please enter a prize to continue</p>
       <div class="prize-modal-buttons"><button class="prize-modal-button cancel" id="cancelPrizeButton">Cancel</button> <button class="prize-modal-button confirm" id="confirmPrizeButton">Spin!</button>
       </div>
      </div>
@@ -663,6 +664,7 @@ David" aria-label="Bulk names input" rows="10" style="resize: vertical; font-fam
     const bulkInput = document.getElementById('bulkInput');
     const confirmBulkButton = document.getElementById('confirmBulkButton');
     const cancelBulkButton = document.getElementById('cancelBulkButton');
+    const prizeError = document.getElementById('prizeError');
 
     const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E2', '#F8B739', '#52B788'];
 
@@ -780,8 +782,17 @@ David" aria-label="Bulk names input" rows="10" style="resize: vertical; font-fam
       if (names.length === 0) return;
       prizeModal.classList.add('show');
       prizeInput.value = '';
+      prizeInput.style.borderColor = '#e0e0e0';
+      prizeError.style.display = 'none';
       prizeInput.focus();
     }
+    
+    prizeInput.addEventListener('input', () => {
+      if (prizeInput.value.trim()) {
+        prizeInput.style.borderColor = '#e0e0e0';
+        prizeError.style.display = 'none';
+      }
+    });
 
     function hidePrizeModal() {
       prizeModal.classList.remove('show');
@@ -880,7 +891,16 @@ David" aria-label="Bulk names input" rows="10" style="resize: vertical; font-fam
     clearAllButton.addEventListener('click', clearAll);
     
     confirmPrizeButton.addEventListener('click', () => {
-      currentPrize = prizeInput.value.trim();
+      const prize = prizeInput.value.trim();
+      if (!prize) {
+        prizeInput.style.borderColor = '#ff4757';
+        prizeError.style.display = 'block';
+        prizeInput.focus();
+        return;
+      }
+      prizeInput.style.borderColor = '#e0e0e0';
+      prizeError.style.display = 'none';
+      currentPrize = prize;
       startSpin();
     });
     
@@ -890,7 +910,15 @@ David" aria-label="Bulk names input" rows="10" style="resize: vertical; font-fam
     prizeInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
-        currentPrize = prizeInput.value.trim();
+        const prize = prizeInput.value.trim();
+        if (!prize) {
+          prizeInput.style.borderColor = '#ff4757';
+          prizeError.style.display = 'block';
+          return;
+        }
+        prizeInput.style.borderColor = '#e0e0e0';
+        prizeError.style.display = 'none';
+        currentPrize = prize;
         startSpin();
       }
     });
@@ -1088,5 +1116,5 @@ David" aria-label="Bulk names input" rows="10" style="resize: vertical; font-fam
     drawWheel();
     renderNamesList();
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9af5519cf71bbc43',t:'MTc2NTk2Mjk1Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9afb8a1773d7bc43',t:'MTc2NjAyODE4NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
