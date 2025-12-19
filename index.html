@@ -569,7 +569,7 @@
     </div>
     <div class="winner-overlay" id="winnerOverlay"></div>
     <div class="winner-display" id="winnerDisplay"><button class="close-winner-button" id="closeWinnerButton">×</button>
-     <p class="winner-label">���� Winner 🎉</p>
+     <p class="winner-label">🎊 Winner 🎉</p>
      <p class="winner-name" id="winnerName"></p>
      <p class="winner-prize" id="winnerPrize"></p>
     </div>
@@ -815,27 +815,34 @@ David" aria-label="Bulk names input" rows="10" style="resize: vertical; font-fam
       const hasGenald = genaldIndex !== -1;
 
       let targetRotation;
+      let targetIndex;
       
       if (isTVPrize && hasGenald) {
-        const sliceAngle = 360 / names.length;
-        const genaldSliceCenter = genaldIndex * sliceAngle + (sliceAngle / 2);
-        
-        let desiredFinalRotation = 270 - genaldSliceCenter;
-        while (desiredFinalRotation < 0) desiredFinalRotation += 360;
-        desiredFinalRotation = desiredFinalRotation % 360;
-        
-        const spins = 5 + Math.floor(Math.random() * 3);
-        const totalRotation = spins * 360 + desiredFinalRotation;
-        
-        targetRotation = totalRotation - (currentRotation % 360);
-        if (targetRotation < 0) targetRotation += 360;
-        targetRotation += (spins - 1) * 360;
-        
+        // TV prize: Genald MUST win
+        targetIndex = genaldIndex;
+      } else if (!isTVPrize && hasGenald) {
+        // Non-TV prize: Genald CANNOT win - pick someone else
+        const eligibleIndices = names.map((name, idx) => idx).filter(idx => idx !== genaldIndex);
+        targetIndex = eligibleIndices[Math.floor(Math.random() * eligibleIndices.length)];
       } else {
-        const spins = 5 + Math.random() * 3;
-        const extraDegrees = Math.random() * 360;
-        targetRotation = spins * 360 + extraDegrees;
+        // No Genald: random winner
+        targetIndex = Math.floor(Math.random() * names.length);
       }
+
+      // Calculate rotation to land on target
+      const sliceAngle = 360 / names.length;
+      const targetSliceCenter = targetIndex * sliceAngle + (sliceAngle / 2);
+      
+      let desiredFinalRotation = 270 - targetSliceCenter;
+      while (desiredFinalRotation < 0) desiredFinalRotation += 360;
+      desiredFinalRotation = desiredFinalRotation % 360;
+      
+      const spins = 5 + Math.floor(Math.random() * 3);
+      const totalRotation = spins * 360 + desiredFinalRotation;
+      
+      targetRotation = totalRotation - (currentRotation % 360);
+      if (targetRotation < 0) targetRotation += 360;
+      targetRotation += (spins - 1) * 360;
 
       currentRotation += targetRotation;
 
@@ -844,7 +851,6 @@ David" aria-label="Bulk names input" rows="10" style="resize: vertical; font-fam
 
       setTimeout(() => {
         const normalizedRotation = currentRotation % 360;
-        const sliceAngle = 360 / names.length;
         const pointerAngle = 270;
         
         const adjustedAngle = (pointerAngle - normalizedRotation + 360) % 360;
@@ -1116,5 +1122,5 @@ David" aria-label="Bulk names input" rows="10" style="resize: vertical; font-fam
     drawWheel();
     renderNamesList();
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9afb8a1773d7bc43',t:'MTc2NjAyODE4NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b030d47c238b9ff',t:'MTc2NjEwNjk1OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
